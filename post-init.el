@@ -142,9 +142,6 @@
   :commands which-key-mode
   :hook (after-init . which-key-mode))
 
-(use-package howm
-  :ensure t)
-
 (use-package emacs
   :ensure nil
   :bind
@@ -179,3 +176,4 @@
 (set-face-attribute 'default nil
                     :height 100 :weight 'normal :family "JetBrainsMono NFM")
 
+(minimal-emacs-load-user-init "local.el")
