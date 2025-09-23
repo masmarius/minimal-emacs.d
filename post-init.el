@@ -4,7 +4,7 @@
 (setq w32-lwindow-modifier 'super)
 (w32-register-hot-key [M-tab])
 (w32-register-hot-key [s-])
-(setq w32-enable-caps-lock nil) 
+(setq w32-enable-caps-lock nil)
 
 (global-set-key (kbd "<capslock>") ctl-x-map) ; make capslock key behave like C-x
 (define-key key-translation-map (kbd "ESC") (kbd "C-g")) ; easier cancel with one ESC
@@ -51,67 +51,6 @@
   (completion-styles '(orderless flex basic))
   (completion-category-defaults nil)
   (completion-category-overrides '((file (styles partial-completion)))))
-
-(mapc #'disable-theme custom-enabled-themes)  ; Disable all active themes
-(load-theme 'modus-operandi t)  ; Load the built-in theme
-
-(use-package org
-  :ensure t
-  :commands (org-mode org-version)
-  :mode
-  ("\\.org\\'" . org-mode)
-  :config
-  (setq org-ellipsis " ▼ ")
-  (set-face-attribute 'org-ellipsis nil :inherit 'default :box nil)
-  :custom
-  (org-hide-leading-stars t)
-  (org-startup-indented t)
-  (org-adapt-indentation nil)
-  (org-edit-src-content-indentation 0)
-  (org-startup-truncated t)
-  ;; local system-specific custom folders
-  (org-directory "~/org/")
-  (org-default-notes-file (expand-file-name "inbox.org" org-directory))
-  (org-todo-keywords
-   '((sequence
-      "TODO(t)" ; Initial creation
-      "|" ; Remaining close task
-      "DONE(d)" ; Normal completion
-      "ARCHIVE(a)" ; Already did it
-      ))))
-
-  
-(use-package org-capture
-  :ensure nil
-  :init (require 'org-protocol)
-  :custom
-  (org-capture-templates
-   '(("i" "Entrada" entry
-      (file "inbox.org")
-      "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:"
-      :empty-lines 1)
-     ("x" "Org-Capture-Protocol" entry
-      (file "inbox.org")
-      "* [[%:link][%:description]]\n\:PROPERTIES:\n:CREATED: %U\n:END:\n%?"
-      ))
-   ))
-
-(use-package org-refile
-  :ensure nil
-  :after org
-  :config
-  (setq org-refile-targets `((org-agenda-files . (:maxlevel . 3))
-                             ("referencias.org" :maxlevel . 3)
-                             ("proyectos.org" :maxlevel . 3)
-                             ("tareas.org" :maxlevel . 3)
-                             ("journal.org" :maxlevel . 3)
-                             ("fechas.org" :maxlevel . 3))
-        org-refile-use-outline-path 'file
-        org-outline-path-complete-in-steps nil   ; Refile in a single go
-        org-refile-allow-creating-parent-nodes 'confirm)
-  )
-
-(setq org-archive-location "archive.org::datetree/")
 
 ;; When Delete Selection mode is enabled, typed text replaces the selection
 ;; if the selection is active.
@@ -171,9 +110,5 @@
   :commands server-start
   :hook
   (after-init . server-start))
-
-;; Set the default font with specific size and weight
-(set-face-attribute 'default nil
-                    :height 100 :weight 'normal :family "JetBrainsMono NFM")
 
 (minimal-emacs-load-user-init "local.el")
