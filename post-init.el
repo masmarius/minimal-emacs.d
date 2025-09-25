@@ -10,6 +10,27 @@
 (define-key key-translation-map (kbd "ESC") (kbd "C-g")) ; easier cancel with one ESC
 (global-set-key [remap dabbrev-expand] 'hippie-expand) ; replace dabbrev-expand with hippie-expand
 
+(delete-selection-mode 1)
+(setq line-number-mode t)
+(setq column-number-mode t)
+(setq mode-line-position-column-line-format '("%l:%C"))
+(add-hook 'after-init-hook #'show-paren-mode)
+;; Dired buffers: Automatically hide file details (permissions, size,
+;; modification date, etc.) and all the files in the `dired-omit-files' regular
+;; expression for a cleaner display.
+(add-hook 'dired-mode-hook #'dired-hide-details-mode)
+;; Hide files from dired
+(setq dired-omit-files (concat "\\`[.]\\'"))
+(add-hook 'dired-mode-hook #'dired-omit-mode)
+;; Enables visual indication of minibuffer recursion depth after initialization.
+(add-hook 'after-init-hook #'minibuffer-depth-indicate-mode)
+;; Enabled backups save your changes to a file intermittently
+(setq make-backup-files t)
+(setq vc-make-backup-files t)
+(setq kept-old-versions 10)
+(setq kept-new-versions 10)
+
+
 (use-package autorevert
   :ensure nil
   :commands (auto-revert-mode global-auto-revert-mode)
@@ -51,30 +72,6 @@
   (completion-styles '(orderless flex basic))
   (completion-category-defaults nil)
   (completion-category-overrides '((file (styles partial-completion)))))
-
-;; When Delete Selection mode is enabled, typed text replaces the selection
-;; if the selection is active.
-(delete-selection-mode 1)
-;; Display the current line and column numbers in the mode line
-(setq line-number-mode t)
-(setq column-number-mode t)
-(setq mode-line-position-column-line-format '("%l:%C"))
-;; Paren match highlighting
-(add-hook 'after-init-hook #'show-paren-mode)
-;; Dired buffers: Automatically hide file details (permissions, size,
-;; modification date, etc.) and all the files in the `dired-omit-files' regular
-;; expression for a cleaner display.
-(add-hook 'dired-mode-hook #'dired-hide-details-mode)
-;; Hide files from dired
-(setq dired-omit-files (concat "\\`[.]\\'"))
-(add-hook 'dired-mode-hook #'dired-omit-mode)
-;; Enables visual indication of minibuffer recursion depth after initialization.
-(add-hook 'after-init-hook #'minibuffer-depth-indicate-mode)
-;; Enabled backups save your changes to a file intermittently
-(setq make-backup-files t)
-(setq vc-make-backup-files t)
-(setq kept-old-versions 10)
-(setq kept-new-versions 10)
 
 (use-package which-key
   :ensure nil ; builtin
