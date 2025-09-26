@@ -10,6 +10,7 @@
 (define-key key-translation-map (kbd "ESC") (kbd "C-g")) ; easier cancel with one ESC
 (global-set-key [remap dabbrev-expand] 'hippie-expand) ; replace dabbrev-expand with hippie-expand
 
+(repeat-mode 1)
 (delete-selection-mode 1)
 (setq line-number-mode t)
 (setq column-number-mode t)
