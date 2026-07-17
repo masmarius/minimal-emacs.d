@@ -1,10 +1,9 @@
 ;;; post-init.el --- post-init file -*- no-byte-compile: t; lexical-binding: t; -*-
 
 ;; lisp folder on the load-path
-(add-to-list 'load-path
-             (expand-file-name "lisp" user-emacs-directory))
-(require 'my-orgmode)
-(load "~/.emacs.d/lisp/org-capture-popup.el")
+;(add-to-list 'load-path
+;(require 'my-orgmode)
+;(load "~/.emacs.d/lisp/org-capture-popup.el")
 
 ;; emacs base options
 (use-package emacs
@@ -153,3 +152,12 @@
   :config
   (unless (server-running-p)
     (server-start)))
+
+(add-to-list 'load-path
+             (expand-file-name "modules" user-emacs-directory))
+
+(let ((local-file (expand-file-name "post-init-local.el"
+                                    user-emacs-directory)))
+  (when (file-exists-p local-file)
+    (load local-file nil t)))
+

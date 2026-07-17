@@ -4,3 +4,4 @@
 !init.el
 !.github/
 !.LICENSE
+!post-init-local.el
