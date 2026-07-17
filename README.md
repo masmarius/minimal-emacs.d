@@ -402,6 +402,8 @@ To configure `corfu` and `cape`, add the following to `~/.emacs.d/post-init.el`:
   (add-hook 'completion-at-point-functions #'cape-elisp-block))
 ```
 
+**Note:** Setting `corfu-auto` to `t` to enable automatic completion is discouraged for both performance and security reasons. Continuous polling of heavy completion-at-point functions (CAPFs) and external LSP servers on every keystroke introduces latency. More significantly, automatic completion introduces security vulnerabilities when working with untrusted code. This background parsing forces external binaries and language servers to process buffer contents without explicit user intent, creating attack vectors for arbitrary code execution. It is recommended to activate `corfu-auto` only in directories where all files are trusted.
+
 ### Vertico, Consult, Marginalia, and Embark
 
 [Vertico](https://github.com/minad/vertico), [Consult](https://github.com/minad/consult), and [Embark](https://github.com/oantolin/embark) collectively enhance Emacs' completion and navigation capabilities.
@@ -2185,6 +2187,52 @@ To configure the *buffer-guardian* package, add the following to your `~/.emacs.
 
   :init
   (buffer-guardian-mode 1))
+```
+
+### Jump between matching syntactic text objects, such as HTML tags, conditional blocks (if/then/else), and paired parentheses
+
+**NOTE:** Despite its name, the **evil-matchit** package is fully compatible with vanilla Emacs and does not require `evil-mode`.
+
+The [evil-matchit](https://github.com/redguardtoo/evil-matchit/) package is an extensible package that allows jumping between matching syntactic pairs. It provides out-of-the-box support for a wide array of syntaxes, ranging from Python indentation blocks and Bash shell scripting constructs to Git merge conflicts. Although designed to integrate cleanly with `evil-mode`, the package operates entirely independently and offers native commands for standard usage. Additionally, it features an accessible Elisp API, enabling developers to quickly write custom matching rules and integrate third-party jump functions for any unsupported languages.
+
+To configure the `evil-matchit` package, add the following to your `~/.emacs.d/post-init.el`:
+```elisp
+;; The `evil-matchit' package is a extensible package that allows jumping
+;; between matching syntactic pairs. It provides out-of-the-box support for a
+;; wide array of syntaxes, ranging from Python indentation blocks and Bash shell
+;; scripting constructs to Git merge conflicts.
+;;
+;; Although designed to integrate cleanly with `evil-mode', the package operates
+;; entirely independently and offers native commands for standard usage.
+;; Additionally, it features an accessible Elisp API, enabling developers to
+;; quickly write custom matching rules and integrate third-party jump functions
+;; for any unsupported languages.
+(use-package evil-matchit
+  :commands turn-on-evil-matchit-mode
+  :hook (prog-mode . turn-on-evil-matchit-mode)
+
+  :init
+  ;; Setting this to t disables the advanced Python matching algorithm.
+  ;; Set to nil if you prefer the advanced block-matching behavior in Python.
+  (setq evilmi-always-simple-jump t)
+
+  ;; Uncomment the following if you are an `evil-mode' user:
+  ;; (with-eval-after-load 'evil
+  ;;   (require 'evil-matchit-evil-setup))
+
+  :config
+  ;; Because evil-matchit maps its rules to traditional major modes by default,
+  ;; we must manually associate the new tree-sitter modes with their respective
+  ;; matching rules until the package incorporates them natively.
+  (when (fboundp 'evilmi-load-plugin-rules)
+    (evilmi-load-plugin-rules '(cmake-ts-mode) '(cmake))
+    (evilmi-load-plugin-rules '(c-ts-mode c++-ts-mode) '(c simple))
+    (evilmi-load-plugin-rules '(bash-ts-mode) '(simple sh))
+    (evilmi-load-plugin-rules '(css-ts-mode) '(simple))
+    (evilmi-load-plugin-rules '(php-ts-mode) '(simple template html))
+    (evilmi-load-plugin-rules '(lua-ts-mode) '(simple script))
+    (evilmi-load-plugin-rules '(python-ts-mode) '(simple python))
+    (evilmi-load-plugin-rules '(yaml-ts-mode) '(simple yaml))))
 ```
 
 ## Customizations: Before init (File: pre-init.el)
